@@ -1,12 +1,11 @@
 package bbdd2.accidents.model;
 
-import java.util.Date;
+//import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 @Document(
-	    indexName = "prueba_accidents", 
-//	    type = "prueba_accidents", 
+	    indexName = "pruba_mutate5",
 	    shards = 1, 
 	    replicas = 0, 
 	    refreshInterval = "-1"
@@ -18,8 +17,8 @@ public class Accident {
 	private String source;
 	private String TMC;
 	private String severity;
-	private Date startTime;
-	private Date endTime;
+	private String startTime;
+	private String endTime;
 	private String startLat;
 	private String startLng;
 	private String endLat;
@@ -36,7 +35,7 @@ public class Accident {
 	private String country;
 	private String timezone;
 	private String airportCode;
-	private Date weatherTimestamp;
+	private String weatherTimestamp;
 	private Float temperature;
 	private Float windChill;
 	private Float humidity;
@@ -88,16 +87,16 @@ public class Accident {
 	public void setSeverity(String severity) {
 		this.severity = severity;
 	}
-	public Date getStartTime() {
+	public String getStartTime() {
 		return startTime;
 	}
-	public void setStartTime(Date startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
-	public Date getEndTime() {
+	public String getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(Date endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 	public String getStartLat() {
@@ -196,10 +195,10 @@ public class Accident {
 	public void setAirportCode(String airportCode) {
 		this.airportCode = airportCode;
 	}
-	public Date getWeatherTimestamp() {
+	public String getWeatherTimestamp() {
 		return weatherTimestamp;
 	}
-	public void setWeatherTimestamp(Date weatherTimestamp) {
+	public void setWeatherTimestamp(String weatherTimestamp) {
 		this.weatherTimestamp = weatherTimestamp;
 	}
 	public Float getTemperature() {

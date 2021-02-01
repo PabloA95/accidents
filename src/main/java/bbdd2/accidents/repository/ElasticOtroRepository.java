@@ -1,40 +1,40 @@
 package bbdd2.accidents.repository;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-
-import bbdd2.accidents.model.Accident;
-
-//import com.google.gson.Gson;
-//import info.unlp.edu.ar.bithub.model.User;
-//import org.bson.types.ObjectId;
+//import java.io.IOException;
+//import java.util.ArrayList;
+//import java.util.List;
+//
 //import org.elasticsearch.action.search.SearchRequest;
 //import org.elasticsearch.action.search.SearchResponse;
 //import org.elasticsearch.client.RequestOptions;
 //import org.elasticsearch.client.RestHighLevelClient;
-//import org.elasticsearch.index.query.MatchQueryBuilder;
 //import org.elasticsearch.index.query.QueryBuilders;
-//import org.elasticsearch.index.query.TermQueryBuilder;
 //import org.elasticsearch.search.SearchHit;
 //import org.elasticsearch.search.builder.SearchSourceBuilder;
 //import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 //
-//import javax.inject.Named;
-//import java.io.IOException;
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
+//import bbdd2.accidents.model.Accident;
+
+////import com.google.gson.Gson;
+////import info.unlp.edu.ar.bithub.model.User;
+////import org.bson.types.ObjectId;
+////import org.elasticsearch.action.search.SearchRequest;
+////import org.elasticsearch.action.search.SearchResponse;
+////import org.elasticsearch.client.RequestOptions;
+////import org.elasticsearch.client.RestHighLevelClient;
+////import org.elasticsearch.index.query.MatchQueryBuilder;
+////import org.elasticsearch.index.query.QueryBuilders;
+////import org.elasticsearch.index.query.TermQueryBuilder;
+////import org.elasticsearch.search.SearchHit;
+////import org.elasticsearch.search.builder.SearchSourceBuilder;
+////import org.springframework.beans.factory.annotation.Autowired;
+////
+////import javax.inject.Named;
+////import java.io.IOException;
+////import java.util.ArrayList;
+////import java.util.List;
+////import java.util.Optional;
 
 //@Named
 public class ElasticOtroRepository {

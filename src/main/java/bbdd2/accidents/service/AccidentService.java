@@ -3,7 +3,7 @@ package bbdd2.accidents.service;
 
 import java.util.Optional;
 
-import org.elasticsearch.common.inject.Inject;
+//import org.elasticsearch.common.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +34,6 @@ public class AccidentService {
 	}
 
 	public Optional<Accident> getById() {
-		return accidentRepository.findById("YoyLX3QBJ8OYuJVgpE6d");
+		return accidentRepository.findById("6ubPSncBVfl8vnm3LUm_");
 	}
 }
