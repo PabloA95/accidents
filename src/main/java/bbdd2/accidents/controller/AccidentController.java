@@ -46,6 +46,11 @@ public class AccidentController extends AbstractController {
 		return this.accidentService.getById();
 	}
 
+	@GetMapping("/api/poligono_hardcodeado")
+	public Iterable<Accident> getInPolygon(){
+		return this.accidentService.getInsidePolygon();
+	}
+
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

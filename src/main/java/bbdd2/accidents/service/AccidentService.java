@@ -26,7 +26,7 @@ public class AccidentService {
 	}
 
 	public Iterable<Accident> getTop10() {
-		return accidentRepository.findAll();
+		return accidentRepository.findTop3ByOrderByDistance();
 	}
 
 	public Optional<Accident> getByNumber(){
@@ -35,5 +35,9 @@ public class AccidentService {
 
 	public Optional<Accident> getById() {
 		return accidentRepository.findById("6ubPSncBVfl8vnm3LUm_");
+	}
+
+	public Iterable<Accident> getInsidePolygon() {
+		return accidentRepository.findInsidePolygon();
 	}
 }
