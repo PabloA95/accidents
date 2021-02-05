@@ -16,7 +16,7 @@ public interface AccidentRepository extends ElasticsearchRepository<Accident,Str
 
 	// https://www.baeldung.com/spring-data-elasticsearch-tutorial
 	// Armar el JSON de los puntos a mano y pasarlo como string!
-	@Query("{\"bool\":{\"must\":{\"match_all\":{}},\"filter\":{\"geo_polygon\":{\"startPos\":{\"points\":[{\"lon\":-80,\"lat\":30},{\"lon\":-80,\"lat\":45},{\"lon\":-90,\"lat\":30},{\"lon\":-90,\"lat\":45}]}}}}}")
-	public Iterable<Accident> findInsidePolygon();
+	@Query("{\"bool\":{\"must\":{\"match_all\":{}},\"filter\":{\"geo_polygon\":{\"startPos\":{\"points\":[?0]}}}}}")
+	public Iterable<Accident> findInsidePolygon(String polygon);
 
 }

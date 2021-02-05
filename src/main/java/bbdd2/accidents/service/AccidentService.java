@@ -37,7 +37,7 @@ public class AccidentService {
 		return accidentRepository.findById("6ubPSncBVfl8vnm3LUm_");
 	}
 
-	public Iterable<Accident> getInsidePolygon() {
-		return accidentRepository.findInsidePolygon();
+	public Iterable<Accident> getInsidePolygon(String polygon) {
+		return accidentRepository.findInsidePolygon(polygon);
 	}
 }
