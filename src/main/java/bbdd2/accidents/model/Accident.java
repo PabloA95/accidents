@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 @Document(
-	    indexName = "pruba_mutate5",
+	    indexName = "prueba_geo_end",
 	    shards = 1, 
 	    replicas = 0, 
 	    refreshInterval = "-1"

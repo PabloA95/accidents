@@ -40,4 +40,8 @@ public class AccidentService {
 	public Iterable<Accident> getInsidePolygon(String polygon) {
 		return accidentRepository.findInsidePolygon(polygon);
 	}
+
+	public Iterable<Accident> getDistance(Float distance,String origin) {
+		return accidentRepository.findDistance((int)Math.round(distance),origin);
+	}
 }

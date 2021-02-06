@@ -58,7 +58,7 @@ public class AccidentController extends AbstractController {
 
 	@GetMapping("/api/prueba_parametros")
 //	public String pruebaParametros(@RequestParam (value = "points", required = true) String points){
-	public Object pruebaParametros(@RequestBody String points){
+	public Iterable<Accident> pruebaParametros(@RequestBody String points){
 		JSONObject jason = new JSONObject(points);
 //		jason.get("points");
 		JSONArray jasonArray= jason.getJSONArray("points"); //.toString();
@@ -74,6 +74,16 @@ public class AccidentController extends AbstractController {
 //		System.out.println(polygon);
 		return this.accidentService.getInsidePolygon(polygon);
 //		return polygon;
+	}
+
+	@GetMapping("/api/distance")
+//	public String pruebaParametros(@RequestParam (value = "points", required = true) String points){
+	public Object getDistance(@RequestBody String param){
+		JSONObject jason = new JSONObject(param);
+		Float distance = Float.parseFloat(jason.get("distance").toString());
+		String origin = jason.get("origin").toString();
+//		System.out.println(origin);
+		return this.accidentService.getDistance(distance,origin);
 	}
 
 	@Override

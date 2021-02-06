@@ -19,4 +19,9 @@ public interface AccidentRepository extends ElasticsearchRepository<Accident,Str
 	@Query("{\"bool\":{\"must\":{\"match_all\":{}},\"filter\":{\"geo_polygon\":{\"startPos\":{\"points\":[?0]}}}}}")
 	public Iterable<Accident> findInsidePolygon(String polygon);
 
+
+	// Falta pasar lat y lng como parametros
+	@Query("{\"bool\":{\"must\":{\"match_all\":{}},\"filter\":{\"geo_distance\":{\"distance\":\"?0km\",\"startPos\":?1}}}}")
+	public Iterable<Accident> findDistance(Integer distance,String origin);
+
 }
