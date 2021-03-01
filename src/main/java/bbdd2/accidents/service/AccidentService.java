@@ -44,4 +44,14 @@ public class AccidentService {
 	public Iterable<Accident> getDistance(Float distance,String origin) {
 		return accidentRepository.findDistance((int)Math.round(distance),origin);
 	}
+
+	public String getMostCommonConditions() {
+		String columnas[] = {"pressure"}; // ,"distance"
+String aux="";
+		for(String s:columnas) {
+			aux=aux+"Consulta   ";
+			aux=aux+accidentRepository.findMostCommonConditions(s);
+		}
+		return aux;
+	}
 }

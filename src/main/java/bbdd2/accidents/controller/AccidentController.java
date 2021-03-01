@@ -70,7 +70,7 @@ public class AccidentController extends AbstractController {
 //			System.out.println(act);
 			 polygon=polygon+it.next();
 			 if(it.hasNext()) polygon=polygon+",";
-			}
+		}
 //		System.out.println(polygon);
 		return this.accidentService.getInsidePolygon(polygon);
 //		return polygon;
@@ -84,6 +84,11 @@ public class AccidentController extends AbstractController {
 		String origin = jason.get("origin").toString();
 //		System.out.println(origin);
 		return this.accidentService.getDistance(distance,origin);
+	}
+
+	@GetMapping("/api/condiciones")
+	public String getMostCommonConditions() {
+		return this.accidentService.getMostCommonConditions();
 	}
 
 	@Override
