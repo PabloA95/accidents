@@ -3,6 +3,8 @@ package bbdd2.accidents.service;
 
 import java.util.Optional;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 //import org.elasticsearch.common.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,12 +48,20 @@ public class AccidentService {
 	}
 
 	public String getMostCommonConditions() {
-		String columnas[] = {"pressure"}; // ,"distance"
-String aux="";
+		String columnas[] = {"pressure","distance"}; // ,"distance"
+//		String aux="";
+//		System.out.println("\n\n\n\n\naaaaa");
+		
+		JSONObject jsonResponse = new JSONObject();
 		for(String s:columnas) {
-			aux=aux+"Consulta   ";
-			aux=aux+accidentRepository.findMostCommonConditions(s);
+//			aux=aux+"Consulta   ";
+			JSONObject aux2= accidentRepository.findMostCommonConditions(s);
+//			aux=aux+aux2;
+//			System.out.println("asfdasdasd"+aux2);
+			jsonResponse.put(s, aux2);
+//			jsonResponse.append(s, aux2);
+
 		}
-		return aux;
+		return jsonResponse.toString();
 	}
 }

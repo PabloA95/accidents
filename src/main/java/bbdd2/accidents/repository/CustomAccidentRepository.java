@@ -1,6 +1,8 @@
 package bbdd2.accidents.repository;
 
+import org.json.JSONObject;
+
 public interface CustomAccidentRepository {
 
-	public String findMostCommonConditions(String s);
+	public JSONObject findMostCommonConditions(String s);
 }
