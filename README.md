@@ -8,6 +8,13 @@ Para revisar que se haya creado con exito ingresar a:
 
 http://localhost:9200/_template/prueba_geo_end?pretty
 
+Luego de cargar el indice, probar que se haya cargado correctamente en:
+
+http://localhost:9200/prueba_geo_end/_search?pretty
+
+
+
+Ejecutar curl -X PUT http://localhost:9200/prueba_accidents1/_mapping -H 'Content-Type: application/json' -d '{"properties":{"NOMBRE_DE_LA_COLUMNA":{"type":"text","fielddata":true}}}' para cada attributo de tipo text que quiera ser consultado en las condiciones comunes. 
 
 
 ---

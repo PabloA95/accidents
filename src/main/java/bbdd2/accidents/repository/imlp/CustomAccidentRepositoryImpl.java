@@ -64,26 +64,16 @@ public class CustomAccidentRepositoryImpl implements CustomAccidentRepository {
 	            .subAggregation(AggregationBuilders.terms(s).field(s).size(1).order(BucketOrder.count(false)));
 	    sourceBuilder.aggregation(aggregation);
 	    try {
-		    SearchRequest searchRequest = new SearchRequest("prueba_geo_end").source(sourceBuilder);
+		    SearchRequest searchRequest = new SearchRequest("prueba_completa").source(sourceBuilder);
 		    SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 		    Aggregations aggregations = searchResponse.getAggregations();
-	//		Terms byZipAggregation = aggregations.get("home_zip");
-	//		System.out.print(byZipAggregation);
-
-//		    System.out.println(searchRequest);
-//		    System.out.println("-----------------");
-//		    System.out.println(searchResponse);
-//		    System.out.println(searchResponse.toString());
-
-		    JSONObject jsonResponse = new JSONObject(searchResponse.toString());
-//			System.out.println(((JSONObject) ((JSONObject)jsonResponse.get("aggregations")).get("global#agg")).get("dterms#"+s));
-		    
-		    JSONArray jsonResult = jsonResponse.getJSONObject("aggregations").getJSONObject("global#agg").getJSONObject("dterms#"+s).getJSONArray("buckets");
-		    System.out.println(s+" "+jsonResult.getJSONObject(0));
+		    JSONObject jsonResponse = new JSONObject(searchResponse.toString().replaceAll("(dterms|sterms)","terms"));		      
+		    JSONArray jsonResult = jsonResponse.getJSONObject("aggregations").getJSONObject("global#agg").getJSONObject("terms#"+s).getJSONArray("buckets");
 		    client.close();
 		    JSONObject result = jsonResult.getJSONObject(0); 
 		    result.put("repeticiones", result.remove("doc_count"));
 		    result.put("valor", result.remove("key"));
+//		    System.out.println(s+" "+result);
 		    return result;
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -48,19 +48,13 @@ public class AccidentService {
 	}
 
 	public String getMostCommonConditions() {
-		String columnas[] = {"pressure","distance"}; // ,"distance"
-//		String aux="";
-//		System.out.println("\n\n\n\n\naaaaa");
+		String columnas[] = {"distance","temperature","windChill","humidity","pressure","visibility","windSpeed","windDirection","nauticalTwilight","severity","sunriseSunset","civilTwilight","astronomicalTwilight","weatherCondition"}; //"precipitation"
+//		String columnas[] = {"temperature","windChill","humidity","pressure","visibility","windDirection","windSpeed","precipitation","weatherCondition","amenity","crossing","station","trafficCalming","trafficSignal","turningLoop","sunriseSunset","civilTwilight","nauticalTwilight"};
 		
 		JSONObject jsonResponse = new JSONObject();
 		for(String s:columnas) {
-//			aux=aux+"Consulta   ";
 			JSONObject aux2= accidentRepository.findMostCommonConditions(s);
-//			aux=aux+aux2;
-//			System.out.println("asfdasdasd"+aux2);
 			jsonResponse.put(s, aux2);
-//			jsonResponse.append(s, aux2);
-
 		}
 		return jsonResponse.toString();
 	}
