@@ -1,13 +1,21 @@
 package bbdd2.accidents.controller;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
+import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,41 +44,74 @@ public class AccidentController extends AbstractController {
 		return this.accidentService.getById();
 	}
 
-//	@GetMapping("/api/poligono_hardcodeado")
-//	public Iterable<Accident> getInPolygon(){
-//		return this.accidentService.getInsidePolygon();
-//	}
-
 	@GetMapping("/api/prueba_parametros")
-//	public String pruebaParametros(@RequestParam (value = "points", required = true) String points){
-	public Iterable<Accident> pruebaParametros(@RequestBody String points){
+	public Object pruebaParametros(@RequestBody String points) throws FileNotFoundException{
+		InputStream schemaStream = new FileInputStream("./src/main/java/bbdd2/accidents/controller/polygonSchema.json");
+		JSONObject rawSchema = new JSONObject(new JSONTokener(schemaStream));
+	    SchemaLoader loader = SchemaLoader.builder().schemaJson(rawSchema).build();
+	    Schema schema =  loader.load().build();
+	    
+//		String aux = "{\"definitions\": {},\"$schema\": \"http://json-schema.org/draft-07/schema#\", \"$id\": \"https://example.com/object1616011172.json\", \"title\": \"polygon\", \"type\": \"object\",\"required\": [\"points\"],\"properties\": {\"points\": {\"$id\": \"points\", \"title\": \"Points\", \"type\": \"array\",\"uniqueItems\": true,\"minItems\": 3,\"items\":{\"$id\": \"points/items\", \"title\": \"Items\", \"type\": \"object\",\"required\": [\"lon\",\"lat\"],\"properties\": {\"lon\": {\"$id\": \"points/items/lon\", \"title\": \"Lon\", \"type\": \"number\",\"minimum\": -180,\"maximum\": 180},\"lat\": {\"$id\": \"points/items/lat\", \"title\": \"Lat\", \"type\": \"number\",\"minimum\": -90,\"maximum\": 90}}}}}}";
+//		JSONObject jsonSchema = new JSONObject(new JSONTokener(aux));
+//		Schema schema = SchemaLoader.load(jsonSchema);
 		JSONObject jason = new JSONObject(points);
-//		jason.get("points");
-		JSONArray jasonArray= jason.getJSONArray("points"); //.toString();
-		jasonArray.toList().get(0);
-		Iterator<Object> it=jasonArray.iterator();
-		String polygon="";
-		while (it.hasNext()) {
-//			Object act= it.next();
-//			System.out.println(act);
-			 polygon=polygon+it.next();
-			 if(it.hasNext()) polygon=polygon+",";
+		try {
+			schema.validate(jason);
+			JSONArray jasonArray= jason.getJSONArray("points"); //.toString();
+//			jasonArray.toList().get(0);
+			String aux = jasonArray.toString();
+			String polygon=aux.substring(1, aux.length()-1);
+			
+			System.out.println(aux);
+//			Iterator<Object> it=jasonArray.iterator();
+//			String polygon="";
+//			while (it.hasNext()) {
+//				 polygon=polygon+it.next();
+//				 if(it.hasNext()) polygon=polygon+",";
+//			}
+			return this.accidentService.getInsidePolygon(polygon);
+		} catch (ValidationException e) {
+			List<String> err = e.getAllMessages();
+			JSONObject errors= new JSONObject();
+			for(String s:err){
+				String[] parts = s.split(": ");
+				String key = parts[0].substring(2, parts[0].length());
+				String value = parts[1];
+				errors.put(key, value);
+			}
+			return errors.toString();
 		}
-//		System.out.println(polygon);
-		return this.accidentService.getInsidePolygon(polygon);
-//		return polygon;
 	}
 
 	@GetMapping("/api/distance")
-//	public String pruebaParametros(@RequestParam (value = "points", required = true) String points){
-	public Object getDistance(@RequestBody String param){
+	public Object getDistance(@RequestBody String param) throws FileNotFoundException{
+		InputStream schemaStream = new FileInputStream("./src/main/java/bbdd2/accidents/controller/circleSchema.json");
+		JSONObject rawSchema = new JSONObject(new JSONTokener(schemaStream));
+	    SchemaLoader loader = SchemaLoader.builder().schemaJson(rawSchema).build();
+	    Schema schema =  loader.load().build();
+	    
+//		String aux = "{\"$schema\": \"http://json-schema.org/draft-07/schema#\", \"$id\": \"https://example.com/object1616001697.json\", \"title\": \"Root\", \"type\": \"object\",\"required\": [\"distance\",\"origin\"],\"properties\": {\"distance\": {\"$id\": \"distance\", \"title\": \"Distance\", \"type\": \"number\",\"exclusiveMinimum\":0},\"origin\": {\"$id\": \"origin\", \"title\": \"Origin\", \"type\": \"object\",\"required\": [\"lat\",\"lon\"],\"properties\": {\"lat\": {\"title\": \"Lat\", \"type\": \"number\",\"minimum\": -90,\"maximum\": 90},\"lon\": {\"title\": \"Lon\", \"type\": \"number\",\"minimum\": -180,\"maximum\": 180}}}}}";
+//		JSONObject jsonSchema = new JSONObject(new JSONTokener(aux));
+//		Schema schema = SchemaLoader.load(jsonSchema);
 		JSONObject jason = new JSONObject(param);
-		Float distance = Float.parseFloat(jason.get("distance").toString());
-		String origin = jason.get("origin").toString();
-//		System.out.println(origin);
-		return this.accidentService.getDistance(distance,origin);
+		try {
+			schema.validate(jason);
+			Float distance = Float.parseFloat(jason.get("distance").toString());
+			String origin = jason.get("origin").toString();
+			return this.accidentService.getDistance(distance,origin);
+		} catch (ValidationException e) {
+			List<String> err = e.getAllMessages();
+			JSONObject errors= new JSONObject();
+			for(String s:err){
+				String[] parts = s.split(": ");
+				String key = parts[0].substring(2, parts[0].length());
+				String value = parts[1];
+				errors.put(key, value);
+			}
+			return errors.toString();
+		}
 	}
-
+	
 	@GetMapping("/api/condiciones")
 	public String getMostCommonConditions() {
 		return this.accidentService.getMostCommonConditions();

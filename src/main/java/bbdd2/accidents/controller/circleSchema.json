@@ -1,0 +1,44 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#", 
+	"$id": "https://example.com/object1616001697.json", 
+	"title": "Root", 
+	"type": "object",
+	"required": [
+		"distance",
+		"origin"
+	],
+	"properties": {
+		"distance": {
+			"$id": "distance", 
+			"title": "Distance", 
+			"type": "number",
+			"exclusiveMinimum":0
+		},
+		"additionalProperties":false,
+		"origin": {
+			"$id": "origin", 
+			"title": "Origin", 
+			"type": "object",
+			"additionalProperties":false,
+			"required": [
+				"lat",
+				"lon"
+			],
+			"properties": {
+				"lat": {
+					"title": "Lat", 
+					"type": "number",
+					"minimum": -90,
+					"maximum": 90
+				},
+				"lon": {
+					"title": "Lon", 
+					"type": "number",
+					"minimum": -180,
+					"maximum": 180
+				}
+			}
+		}
+
+	}
+}
