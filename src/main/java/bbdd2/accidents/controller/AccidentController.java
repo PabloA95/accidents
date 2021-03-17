@@ -31,21 +31,6 @@ public class AccidentController extends AbstractController {
 		return this.accidentService.getNumber();
 	}
 
-	@GetMapping("/api/html")
-	public String getHtml() {
-		return this.accidentService.getHtml();
-	}
-
-	@GetMapping("/api/top10")
-	public Iterable<Accident> getTop10() {
-		return this.accidentService.getTop10();
-	}
-
-	@GetMapping("/api/bynumber")
-	public Optional<Accident> getByNumber(){
-		return this.accidentService.getByNumber();
-	}
-
 	@GetMapping("/api/byid")
 	public Optional<Accident> getById(){
 		return this.accidentService.getById();

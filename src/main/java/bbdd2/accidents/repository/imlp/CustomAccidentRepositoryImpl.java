@@ -24,47 +24,20 @@ import bbdd2.accidents.repository.CustomAccidentRepository;
 
 public class CustomAccidentRepositoryImpl implements CustomAccidentRepository {
 
-//	@Autowired
-//	private RestHighLevelClient client;
-
-	// {"size":0,"aggs":{"pressure":{"terms": {"field":"pressure","size":1,"order":{"_count":"desc"}}}}}
 	public JSONObject findMostCommonConditions(String s) {
-
-//		RestHighLevelClient client = new RestHighLevelClient(
-//                RestClient.builder(
-//                        new HttpHost("localhost", 9200, "http")));
-//		System.out.println(client);
 
 		RestHighLevelClient client = new RestHighLevelClient(
 				RestClient.builder(
 						new HttpHost("localhost", 9200, "http")));
-//		System.out.println("Cliente conectado. ");
-//		try {
-//			MainResponse response = client.info(RequestOptions.DEFAULT);
-//			String clusterName = response.getClusterName();
-//			String clusterUuid = response.getClusterUuid();
-//			String nodeName = response.getNodeName();
-//			Version version = response.getVersion();
-//			System.out.println("Información del cluster: ");
-//			System.out.println("Nombre del cluster: "+ clusterName);
-//			System.out.println("Identificador del cluster: "+ clusterUuid);
-//			System.out.println("Nombre de los nodos del cluster: "+ nodeName);
-//			System.out.println("Versión de elasticsearch del cluster: "+ version.toString());
-//			client.close();
-//			System.out.println("Cliente desconectado.");
-//			
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 
-	    int numberOfSearchHitsToReturn = 0; // defaults to 10
+	    int numberOfSearchHitsToReturn = 0; //	defaults to 10
 	    SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
 	    sourceBuilder.size(numberOfSearchHitsToReturn);
 	    GlobalAggregationBuilder aggregation = AggregationBuilders.global("agg")
 	            .subAggregation(AggregationBuilders.terms(s).field(s).size(1).order(BucketOrder.count(false)));
 	    sourceBuilder.aggregation(aggregation);
 	    try {
-		    SearchRequest searchRequest = new SearchRequest("prueba_completa").source(sourceBuilder);
+		    SearchRequest searchRequest = new SearchRequest("testing").source(sourceBuilder);
 		    SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 		    Aggregations aggregations = searchResponse.getAggregations();
 		    JSONObject jsonResponse = new JSONObject(searchResponse.toString().replaceAll("(dterms|sterms)","terms"));		      

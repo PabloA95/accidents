@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 @Document(
-	    indexName = "prueba_completa",
+	    indexName = "testing",
 	    shards = 1, 
 	    replicas = 0, 
 	    refreshInterval = "-1"

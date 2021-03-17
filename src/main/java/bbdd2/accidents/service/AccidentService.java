@@ -23,17 +23,13 @@ public class AccidentService {
 		return 1;
 	}
 
-	public String getHtml() {
-		return "<h1>Lista de accidentes</h1><h3>Lalala soy un h3</h3>";
-	}
-
-	public Iterable<Accident> getTop10() {
-		return accidentRepository.findTop3ByOrderByDistance();
-	}
-
-	public Optional<Accident> getByNumber(){
-		return accidentRepository.findByNumber(2584.0);
-	}
+//	public Iterable<Accident> getTop10() {
+//		return accidentRepository.findTop3ByOrderByDistance();
+//	}
+//
+//	public Optional<Accident> getByNumber(){
+//		return accidentRepository.findByNumber(2584.0);
+//	}
 
 	public Optional<Accident> getById() {
 		return accidentRepository.findById("6ubPSncBVfl8vnm3LUm_");
