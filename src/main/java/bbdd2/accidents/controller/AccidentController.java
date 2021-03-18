@@ -14,6 +14,7 @@ import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bbdd2.accidents.model.Accident;
 import bbdd2.accidents.service.AccidentService;
@@ -44,77 +48,80 @@ public class AccidentController extends AbstractController {
 		return this.accidentService.getById();
 	}
 
-	@GetMapping("/api/prueba_parametros")
-	public Object pruebaParametros(@RequestBody String points) throws FileNotFoundException{
-		InputStream schemaStream = new FileInputStream("./src/main/java/bbdd2/accidents/controller/polygonSchema.json");
-		JSONObject rawSchema = new JSONObject(new JSONTokener(schemaStream));
-	    SchemaLoader loader = SchemaLoader.builder().schemaJson(rawSchema).build();
-	    Schema schema =  loader.load().build();
-	    
+	@GetMapping("/api/inside-the-polygon")
+	public String getInsidePolygon(@RequestBody String points) throws FileNotFoundException, JsonProcessingException{
+//		return aux("polygonSchema.json", "poligono", points);
+//		// Forma de hacerlo sin usar un archivo externo para el esquema del JSON
 //		String aux = "{\"definitions\": {},\"$schema\": \"http://json-schema.org/draft-07/schema#\", \"$id\": \"https://example.com/object1616011172.json\", \"title\": \"polygon\", \"type\": \"object\",\"required\": [\"points\"],\"properties\": {\"points\": {\"$id\": \"points\", \"title\": \"Points\", \"type\": \"array\",\"uniqueItems\": true,\"minItems\": 3,\"items\":{\"$id\": \"points/items\", \"title\": \"Items\", \"type\": \"object\",\"required\": [\"lon\",\"lat\"],\"properties\": {\"lon\": {\"$id\": \"points/items/lon\", \"title\": \"Lon\", \"type\": \"number\",\"minimum\": -180,\"maximum\": 180},\"lat\": {\"$id\": \"points/items/lat\", \"title\": \"Lat\", \"type\": \"number\",\"minimum\": -90,\"maximum\": 90}}}}}}";
 //		JSONObject jsonSchema = new JSONObject(new JSONTokener(aux));
 //		Schema schema = SchemaLoader.load(jsonSchema);
-		JSONObject jason = new JSONObject(points);
-		try {
-			schema.validate(jason);
-			JSONArray jasonArray= jason.getJSONArray("points"); //.toString();
-//			jasonArray.toList().get(0);
-			String aux = jasonArray.toString();
-			String polygon=aux.substring(1, aux.length()-1);
-			
-			System.out.println(aux);
-//			Iterator<Object> it=jasonArray.iterator();
-//			String polygon="";
-//			while (it.hasNext()) {
-//				 polygon=polygon+it.next();
-//				 if(it.hasNext()) polygon=polygon+",";
-//			}
-			return this.accidentService.getInsidePolygon(polygon);
-		} catch (ValidationException e) {
-			List<String> err = e.getAllMessages();
-			JSONObject errors= new JSONObject();
-			for(String s:err){
-				String[] parts = s.split(": ");
-				String key = parts[0].substring(2, parts[0].length());
-				String value = parts[1];
-				errors.put(key, value);
-			}
-			return errors.toString();
-		}
-	}
-
-	@GetMapping("/api/distance")
-	public Object getDistance(@RequestBody String param) throws FileNotFoundException{
-		InputStream schemaStream = new FileInputStream("./src/main/java/bbdd2/accidents/controller/circleSchema.json");
+		
+		// Carga el validador de json
+		InputStream schemaStream = new FileInputStream("./src/main/resources/schemas/polygonSchema.json");
 		JSONObject rawSchema = new JSONObject(new JSONTokener(schemaStream));
 	    SchemaLoader loader = SchemaLoader.builder().schemaJson(rawSchema).build();
 	    Schema schema =  loader.load().build();
-	    
-//		String aux = "{\"$schema\": \"http://json-schema.org/draft-07/schema#\", \"$id\": \"https://example.com/object1616001697.json\", \"title\": \"Root\", \"type\": \"object\",\"required\": [\"distance\",\"origin\"],\"properties\": {\"distance\": {\"$id\": \"distance\", \"title\": \"Distance\", \"type\": \"number\",\"exclusiveMinimum\":0},\"origin\": {\"$id\": \"origin\", \"title\": \"Origin\", \"type\": \"object\",\"required\": [\"lat\",\"lon\"],\"properties\": {\"lat\": {\"title\": \"Lat\", \"type\": \"number\",\"minimum\": -90,\"maximum\": 90},\"lon\": {\"title\": \"Lon\", \"type\": \"number\",\"minimum\": -180,\"maximum\": 180}}}}}";
-//		JSONObject jsonSchema = new JSONObject(new JSONTokener(aux));
-//		Schema schema = SchemaLoader.load(jsonSchema);
-		JSONObject jason = new JSONObject(param);
-		try {
+		
+	    try {
+	    	// Crea el JSON, lo valida y llama al service
+			JSONObject jason = new JSONObject(points);
 			schema.validate(jason);
-			Float distance = Float.parseFloat(jason.get("distance").toString());
-			String origin = jason.get("origin").toString();
-			return this.accidentService.getDistance(distance,origin);
+			Iterable<Accident> itr = this.accidentService.getInsideThePolygon(jason);
+			JSONArray result = new JSONArray(itr);
+			return result.toString();
 		} catch (ValidationException e) {
+			// Convierte la lista de errores en JSON y devuelve el resultado
 			List<String> err = e.getAllMessages();
 			JSONObject errors= new JSONObject();
 			for(String s:err){
+				s = s.replace("#/", "");
 				String[] parts = s.split(": ");
-				String key = parts[0].substring(2, parts[0].length());
+				String key = parts[0];
 				String value = parts[1];
 				errors.put(key, value);
 			}
 			return errors.toString();
+		} catch (JSONException e) {
+			return (new JSONObject().put("error", e.getMessage())).toString();
+		}
+	}
+
+	@GetMapping("/api/inside-the-circle")
+	public String getInsideCircle(@RequestBody String param) throws FileNotFoundException, JsonProcessingException{
+//		return aux("circleSchema.json", "circulo", param);
+		// Carga el validador de json
+		InputStream schemaStream = new FileInputStream("./src/main/resources/schemas/circleSchema.json");
+		JSONObject rawSchema = new JSONObject(new JSONTokener(schemaStream));
+	    SchemaLoader loader = SchemaLoader.builder().schemaJson(rawSchema).build();
+	    Schema schema =  loader.load().build();
+		
+	    try {
+	    	// Crea el JSON, lo valida y llama al service
+			JSONObject jason = new JSONObject(param);
+			schema.validate(jason);
+			Iterable<Accident> itr = this.accidentService.getInsideTheCircle(jason);
+			JSONArray result = new JSONArray(itr);
+			return result.toString();
+		} catch (ValidationException e) {
+			// Convierte la lista de errores en JSON y devuelve el resultado
+			List<String> err = e.getAllMessages();
+			JSONObject errors= new JSONObject();
+			for(String s:err){
+				s = s.replace("#/", "");
+				String[] parts = s.split(": ");
+				String key = parts[0];
+				String value = parts[1];
+				errors.put(key, value);
+			}
+			return errors.toString();
+		} catch (JSONException e) {
+			return (new JSONObject().put("error", e.getMessage())).toString();
 		}
 	}
 	
-	@GetMapping("/api/condiciones")
+	@GetMapping("/api/most-common-conditions")
 	public String getMostCommonConditions() {
-		return this.accidentService.getMostCommonConditions();
+		return (this.accidentService.getMostCommonConditions()).toString();
 	}
 
 	@Override
@@ -123,4 +130,40 @@ public class AccidentController extends AbstractController {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+//	---------------------------------
+//	public String aux(String schemaFileName, String forma, String json) throws FileNotFoundException, JsonProcessingException{
+//		InputStream schemaStream = new FileInputStream("./src/main/resources/schemas/"+schemaFileName);
+//		JSONObject rawSchema = new JSONObject(new JSONTokener(schemaStream));
+//	    SchemaLoader loader = SchemaLoader.builder().schemaJson(rawSchema).build();
+//	    Schema schema =  loader.load().build();
+//		
+//	    try {
+//	    	// Crea el JSON, lo valida y llama al service
+//			JSONObject jason = new JSONObject(json);
+//			schema.validate(jason);
+//			Iterable<Accident> itr = null;
+//			if(forma.equals("poligono")) {
+//				itr = this.accidentService.getInsideThePolygon(jason);
+//			} else if (forma.equals("circulo")){ 
+//				itr = this.accidentService.getInsideTheCircle(jason);
+//			}
+//			JSONArray result = new JSONArray(itr);
+//			return result.toString();
+//		} catch (ValidationException e) {
+//			// Convierte la lista de errores en JSON y devuelve el resultado
+//			List<String> err = e.getAllMessages();
+//			JSONObject errors= new JSONObject();
+//			for(String s:err){
+//				s = s.replace("#/", "");
+//				String[] parts = s.split(": ");
+//				String key = parts[0];
+//				String value = parts[1];
+//				errors.put(key, value);
+//			}
+//			return errors.toString();
+//		} catch (JSONException e) {
+//			return (new JSONObject().put("error", e.getMessage())).toString();
+//		}
+//	}
 }

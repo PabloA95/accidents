@@ -23,28 +23,37 @@ public class AccidentService {
 		return 1;
 	}
 
-//	public Iterable<Accident> getTop10() {
-//		return accidentRepository.findTop3ByOrderByDistance();
-//	}
-//
-//	public Optional<Accident> getByNumber(){
-//		return accidentRepository.findByNumber(2584.0);
-//	}
-
 	public Optional<Accident> getById() {
 		return accidentRepository.findById("6ubPSncBVfl8vnm3LUm_");
 	}
 
-	public Iterable<Accident> getInsidePolygon(String polygon) {
+	public Iterable<Accident> getInsideThePolygon(JSONObject jason) {
+		// Arma el objeto JSON con los puntos del poligono para la consulta, quitando los corchetes del arreglo JSON
+		JSONArray jasonArray= jason.getJSONArray("points"); //.toString();
+		String aux = jasonArray.toString();
+		String polygon=aux.substring(1, aux.length()-1);
+		
+//		System.out.println(aux);
+//		jasonArray.toList().get(0);
+//		Iterator<Object> it=jasonArray.iterator();
+//		String polygon="";
+//		while (it.hasNext()) {
+//			 polygon=polygon+it.next();
+//			 if(it.hasNext()) polygon=polygon+",";
+//		}
 		return accidentRepository.findInsidePolygon(polygon);
 	}
 
-	public Iterable<Accident> getDistance(Float distance,String origin) {
-		return accidentRepository.findDistance((int)Math.round(distance),origin);
+	public Iterable<Accident> getInsideTheCircle(JSONObject jason) {
+		Float distance = Float.parseFloat(jason.get("distance").toString());
+		String origin = jason.get("origin").toString();
+		
+		return accidentRepository.findInsideCircle((int)Math.round(distance),origin);
 	}
 
-	public String getMostCommonConditions() {
-		String columnas[] = {"distance","temperature","windChill","humidity","pressure","visibility","windSpeed","windDirection","nauticalTwilight","severity","sunriseSunset","civilTwilight","astronomicalTwilight","weatherCondition"}; //"precipitation"
+	public JSONObject getMostCommonConditions() {
+		// Lista de la seleccio de columnas por las que se desea buscar
+		String columnas[] = {"precipitation","distance","temperature","windChill","humidity","pressure","visibility","windSpeed","windDirection","nauticalTwilight","severity","sunriseSunset","civilTwilight","astronomicalTwilight","weatherCondition"}; //"precipitation"
 //		String columnas[] = {"temperature","windChill","humidity","pressure","visibility","windDirection","windSpeed","precipitation","weatherCondition","amenity","crossing","station","trafficCalming","trafficSignal","turningLoop","sunriseSunset","civilTwilight","nauticalTwilight"};
 		
 		JSONObject jsonResponse = new JSONObject();
@@ -52,6 +61,6 @@ public class AccidentService {
 			JSONObject aux2= accidentRepository.findMostCommonConditions(s);
 			jsonResponse.put(s, aux2);
 		}
-		return jsonResponse.toString();
+		return jsonResponse;
 	}
 }

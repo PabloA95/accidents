@@ -19,6 +19,6 @@ public interface AccidentRepository extends ElasticsearchRepository<Accident,Str
 
 
 	@Query("{\"bool\":{\"must\":{\"match_all\":{}},\"filter\":{\"geo_distance\":{\"distance\":\"?0km\",\"startPos\":?1}}}}")
-	public Iterable<Accident> findDistance(Integer distance,String origin);
+	public Iterable<Accident> findInsideCircle(Integer distance,String origin);
 
 }
