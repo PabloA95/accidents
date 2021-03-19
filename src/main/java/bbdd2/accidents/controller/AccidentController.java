@@ -49,13 +49,13 @@ public class AccidentController extends AbstractController {
 	}
 
 	@GetMapping("/api/inside-the-polygon")
-	public String getInsidePolygon(@RequestBody String points) throws FileNotFoundException, JsonProcessingException{
+	public String getInsidePolygon(@RequestBody(required = false) String points) throws FileNotFoundException, JsonProcessingException{
+		if(points==null) return "{\"error\":\"must send parameters, an json array of {lat, lon} pairs of at least 3 elements\"}";
 //		return aux("polygonSchema.json", "poligono", points);
 //		// Forma de hacerlo sin usar un archivo externo para el esquema del JSON
 //		String aux = "{\"definitions\": {},\"$schema\": \"http://json-schema.org/draft-07/schema#\", \"$id\": \"https://example.com/object1616011172.json\", \"title\": \"polygon\", \"type\": \"object\",\"required\": [\"points\"],\"properties\": {\"points\": {\"$id\": \"points\", \"title\": \"Points\", \"type\": \"array\",\"uniqueItems\": true,\"minItems\": 3,\"items\":{\"$id\": \"points/items\", \"title\": \"Items\", \"type\": \"object\",\"required\": [\"lon\",\"lat\"],\"properties\": {\"lon\": {\"$id\": \"points/items/lon\", \"title\": \"Lon\", \"type\": \"number\",\"minimum\": -180,\"maximum\": 180},\"lat\": {\"$id\": \"points/items/lat\", \"title\": \"Lat\", \"type\": \"number\",\"minimum\": -90,\"maximum\": 90}}}}}}";
 //		JSONObject jsonSchema = new JSONObject(new JSONTokener(aux));
 //		Schema schema = SchemaLoader.load(jsonSchema);
-		
 		// Carga el validador de json
 		InputStream schemaStream = new FileInputStream("./src/main/resources/schemas/polygonSchema.json");
 		JSONObject rawSchema = new JSONObject(new JSONTokener(schemaStream));
@@ -87,7 +87,8 @@ public class AccidentController extends AbstractController {
 	}
 
 	@GetMapping("/api/inside-the-circle")
-	public String getInsideCircle(@RequestBody String param) throws FileNotFoundException, JsonProcessingException{
+	public String getInsideCircle(@RequestBody(required = false) String param) throws FileNotFoundException, JsonProcessingException{
+		if(param==null) return "{\"error\":\"must send parameters distance, origin.lat and origin.lon\"}";
 //		return aux("circleSchema.json", "circulo", param);
 		// Carga el validador de json
 		InputStream schemaStream = new FileInputStream("./src/main/resources/schemas/circleSchema.json");
