@@ -42,4 +42,12 @@ public class ElasticSearchConfig {
         return new RestHighLevelClient(builder);
 
     }
+    
+    @Value("${elasticsearch.indexName}")
+    private String indexName;
+
+    @Bean
+    public String indexName(){
+        return indexName;
+    }
 }

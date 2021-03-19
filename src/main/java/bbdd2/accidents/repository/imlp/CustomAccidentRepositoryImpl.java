@@ -19,11 +19,17 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 
 import bbdd2.accidents.repository.CustomAccidentRepository;
 
+@PropertySource(value = "classpath:application.properties")
 public class CustomAccidentRepositoryImpl implements CustomAccidentRepository {
 
+	@Value("${elasticsearch.indexName}")
+	private String indexName;
+	
 	public JSONObject findMostCommonConditions(String s) {
 
 		RestHighLevelClient client = new RestHighLevelClient(
@@ -37,7 +43,7 @@ public class CustomAccidentRepositoryImpl implements CustomAccidentRepository {
 	            .subAggregation(AggregationBuilders.terms(s).field(s).size(1).order(BucketOrder.count(false)));
 	    sourceBuilder.aggregation(aggregation);
 	    try {
-		    SearchRequest searchRequest = new SearchRequest("testing").source(sourceBuilder);
+		    SearchRequest searchRequest = new SearchRequest(this.indexName).source(sourceBuilder);
 		    SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 		    Aggregations aggregations = searchResponse.getAggregations();
 		    JSONObject jsonResponse = new JSONObject(searchResponse.toString().replaceAll("(dterms|sterms)","terms"));		      
