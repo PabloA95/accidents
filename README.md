@@ -23,7 +23,7 @@ Para cada attributo de tipo texto que quiera ser consultado en las condiciones c
 
 Para la api desarrollada se debe ejecutar:
 ```
-$ url -X PUT http://localhost:9200/nombre-del-indice/_mapping -H 'Content-Type: application/json' -d '{"properties":{"nauticalTwilight":{"type":"text","fielddata":true}, "civilTwilight":{"type":"text","fielddata":true}, "weatherCondition":{"type":"text","fielddata":true},"severity":{"type":"text","fielddata":true}, "sunriseSunset":{"type":"text","fielddata":true}, "astronomicalTwilight":{"type":"text","fielddata":true}, "windDirection":{"type":"text","fielddata":true}}}'
+$ curl -X PUT http://localhost:9200/nombre-del-indice/_mapping -H 'Content-Type: application/json' -d '{"properties":{"nauticalTwilight":{"type":"text","fielddata":true}, "civilTwilight":{"type":"text","fielddata":true}, "weatherCondition":{"type":"text","fielddata":true},"severity":{"type":"text","fielddata":true}, "sunriseSunset":{"type":"text","fielddata":true}, "astronomicalTwilight":{"type":"text","fielddata":true}, "windDirection":{"type":"text","fielddata":true}}}'
 ```
 
 

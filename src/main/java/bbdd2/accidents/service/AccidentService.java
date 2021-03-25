@@ -48,13 +48,12 @@ public class AccidentService {
 		Float distance = Float.parseFloat(jason.get("distance").toString());
 		String origin = jason.get("origin").toString();
 		
-		return accidentRepository.findInsideCircle((int)Math.round(distance),origin);
+		return accidentRepository.findInsideCircle(distance,origin);
 	}
 
 	public JSONObject getMostCommonConditions() {
 		// Lista de la seleccio de columnas por las que se desea buscar
 		String columnas[] = {"precipitation","distance","temperature","windChill","humidity","pressure","visibility","windSpeed","windDirection","nauticalTwilight","severity","sunriseSunset","civilTwilight","astronomicalTwilight","weatherCondition"}; //"precipitation"
-//		String columnas[] = {"temperature","windChill","humidity","pressure","visibility","windDirection","windSpeed","precipitation","weatherCondition","amenity","crossing","station","trafficCalming","trafficSignal","turningLoop","sunriseSunset","civilTwilight","nauticalTwilight"};
 		
 		JSONObject jsonResponse = new JSONObject();
 		for(String s:columnas) {

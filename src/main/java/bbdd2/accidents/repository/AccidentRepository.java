@@ -1,7 +1,5 @@
 package bbdd2.accidents.repository;
 
-import java.util.Optional;
-
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
@@ -19,6 +17,6 @@ public interface AccidentRepository extends ElasticsearchRepository<Accident,Str
 
 
 	@Query("{\"bool\":{\"must\":{\"match_all\":{}},\"filter\":{\"geo_distance\":{\"distance\":\"?0km\",\"startPos\":?1}}}}")
-	public Iterable<Accident> findInsideCircle(Integer distance,String origin);
+	public Iterable<Accident> findInsideCircle(Float distance,String origin);
 
 }

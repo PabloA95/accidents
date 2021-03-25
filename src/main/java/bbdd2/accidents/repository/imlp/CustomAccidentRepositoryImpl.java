@@ -8,17 +8,13 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.core.MainResponse;
-import org.elasticsearch.client.core.MainResponse.Version;
-import org.elasticsearch.cluster.ClusterName;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.Aggregations;
+//import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.BucketOrder;
 import org.elasticsearch.search.aggregations.bucket.global.GlobalAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 
@@ -45,7 +41,7 @@ public class CustomAccidentRepositoryImpl implements CustomAccidentRepository {
 	    try {
 		    SearchRequest searchRequest = new SearchRequest(this.indexName).source(sourceBuilder);
 		    SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-		    Aggregations aggregations = searchResponse.getAggregations();
+//		    Aggregations aggregations = searchResponse.getAggregations();
 		    JSONObject jsonResponse = new JSONObject(searchResponse.toString().replaceAll("(dterms|sterms)","terms"));		      
 		    JSONArray jsonResult = jsonResponse.getJSONObject("aggregations").getJSONObject("global#agg").getJSONObject("terms#"+s).getJSONArray("buckets");
 		    client.close();
