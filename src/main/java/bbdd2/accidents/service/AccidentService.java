@@ -4,6 +4,7 @@ package bbdd2.accidents.service;
 import java.util.Optional;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 //import org.elasticsearch.common.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,25 +24,13 @@ public class AccidentService {
 		return 1;
 	}
 
-	public Optional<Accident> getById() {
-		return accidentRepository.findById("6ubPSncBVfl8vnm3LUm_");
+	public Optional<Accident> getById(String id) {
+		return accidentRepository.findById(id);
 	}
 
 	public Iterable<Accident> getInsideThePolygon(JSONObject jason) {
-		// Arma el objeto JSON con los puntos del poligono para la consulta, quitando los corchetes del arreglo JSON
-		JSONArray jasonArray= jason.getJSONArray("points"); //.toString();
-		String aux = jasonArray.toString();
-		String polygon=aux.substring(1, aux.length()-1);
-		
-//		System.out.println(aux);
-//		jasonArray.toList().get(0);
-//		Iterator<Object> it=jasonArray.iterator();
-//		String polygon="";
-//		while (it.hasNext()) {
-//			 polygon=polygon+it.next();
-//			 if(it.hasNext()) polygon=polygon+",";
-//		}
-		return accidentRepository.findInsidePolygon(polygon);
+		String arrayPoints = jason.getJSONArray("points").toString();
+		return accidentRepository.findInsidePolygon(arrayPoints);
 	}
 
 	public Iterable<Accident> getInsideTheCircle(JSONObject jason) {

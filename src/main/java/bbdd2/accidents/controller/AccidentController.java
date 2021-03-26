@@ -41,9 +41,16 @@ public class AccidentController extends AbstractController {
 		return this.accidentService.getNumber();
 	}
 
-	@GetMapping("/api/byid")
-	public Optional<Accident> getById(){
-		return this.accidentService.getById();
+	@GetMapping("/api/by-id")
+	public Object getById(@RequestBody(required = false) String param){
+		if(param==null) return "Must send an ID in a JSON, like {\"_id\":\"your-id\"}";
+		try {
+			JSONObject jason = new JSONObject(param);
+			String id = jason.get("_id").toString();
+			return this.accidentService.getById(id);
+		} catch (JSONException e) {
+			return (new JSONObject().put("error", e.getMessage())).toString();
+		}
 	}
 
 	@GetMapping("/api/inside-the-polygon")
