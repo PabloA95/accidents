@@ -1,4 +1,15 @@
-# Carga de la base de datos
+# Trabajo final de Base de datos 2 #
+
+**En base a un dataset de 3 millones de accidentes de tránsito, se desarrollo una pequeña API REST que permite:**
+- definir un polígono y que retorne los accidentes que ocurrieron dentro
+- ingresar un punto y un radio y que devuelva todos los accidentes dentro de ese radio
+- obtener un listado de las condiciones más comunes en las que se dan los accidentes (humedad, hora del día, etc)
+
+_La API REST esta implementada con springboot(java), y la base de datos es elasticsearch._
+
+
+
+## Carga de la base de datos
 
 Primero se debe configurar el template para el indice a crear estableciendo los atributos que seran de tipo geo_point, ejecutando:
 ```
@@ -27,7 +38,7 @@ $ curl -X PUT http://localhost:9200/nombre-del-indice/_mapping -H 'Content-Type:
 ```
 
 
-# Pruebas de indices geo_point
+## Pruebas de indices geo_point
 
 Para realizar consulta geoespacial de prueba para la ubicacion dentro de un poligono:  
 `$ curl -X GET http://localhost:9200/nombre-del-indice/_search?pretty -H 'Content-Type: application/json' -d '{"query":{"bool":{"must":{"match_all":{}},"filter":{"geo_polygon":{"startPos":{"points":[{"lon":-80,"lat":30},{"lon":-80,"lat":45},{"lon":-90,"lat":30},{"lon":-90,"lat":45}]}}}}}}'`
@@ -35,12 +46,12 @@ Para realizar consulta geoespacial de prueba para la ubicacion dentro de un poli
 Para realizar consulta geoespacial de prueba para los puntos ubicados dentro de cierto radio:  
 `$ curl -X GET http://localhost:9200/nombre-del-indice/_search?pretty -H 'Content-Type: application/json' -d '{"query":{"bool":{"must":{"match_all":{}},"filter":{"geo_distance":{"distance":"25km","startPos":{"lat":40,"lon":-84}}}}}}'`
 
-# Configuracion de la base de datos en la API
+## Configuracion de la base de datos en la API
 
 Se debera configurar el nombre del indice creado en _src/main/resources/application.properties_
 
 
-# Consultas para realizar a la API
+## Consultas para realizar a la API
 
 ### Consultar la API por los accidentes dentro de un radio determinado:
 
